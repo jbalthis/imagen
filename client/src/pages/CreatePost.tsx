@@ -17,7 +17,7 @@ const CreatePost = () => {
 
   // fetch photo from openai api
   const fetchPhoto = async (prompt: string) => {
-    const response = await fetch("http://localhost:8080/api/v1/dalle", {
+    const response = await fetch("http://localhost:8081/api/v1/dalle", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +51,30 @@ const CreatePost = () => {
     }
   };
 
-  const handleSubmit = () => { return };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (form.prompt && form.photo) {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/posts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(form);
+        });
+        await response.json();
+        navigate('/');
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      alert('Please generate an image...');
+    }
+  };
 
   // handle changes in state via React
   const handleChange = (e: React.ChangeEvent<HTMLFormElement>) => {
@@ -59,7 +82,7 @@ const CreatePost = () => {
   };
 
   const handleSurpriseMe = () => {
-    const randomPrompt = getRandomPrompt(form.prompt);
+    const randomPrompt =getRandomPrompt(form.prompt);
     setForm({ ...form, prompt: randomPrompt });
   };
 
@@ -95,7 +118,7 @@ const CreatePost = () => {
             name="name"
             placeholder="John Doe"
             value={form.name}
-            handleChange={() => handleChange}
+            handleChange={handleChange}
           />
 
           <FormField
@@ -104,7 +127,7 @@ const CreatePost = () => {
             name="prompt"
             placeholder="a painting of a fox in the style of Starry Night"
             value={form.prompt}
-            handleChange={() => handleChange}
+            handleChange={handleChange}
             isSurpriseMe
             handleSurpriseMe={handleSurpriseMe}
           />
@@ -148,15 +171,15 @@ const CreatePost = () => {
             )}
             {generatingImg && (
               <div
-                className="
+         
+                  bg-[rgba(0,0,0,0.5)]
+                  rounded-lg       className="
                   absolute
                   inset-0
                   z-0
                   flex
                   justify-center
                   items-center
-                  bg-[rgba(0,0,0,0.5)]
-                  rounded-lg
                 "
               >
                 <Loader />

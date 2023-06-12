@@ -1,6 +1,48 @@
-const Card = () => {
+import { download } from '../assets';
+import { downloadImage } from '../utils'; 
+
+interface CardProps{
+  _id: string,
+  name: string,
+  prompt: string,
+  photo: string
+}
+
+const Card = ({
+  _id,
+  name,
+  prompt,
+  photo
+}) => {
   return (
-    <div>Card</div>
+    <div className="
+        rounded-xl
+        group
+        relative
+        shadow-card
+        hover:shadow-cardhover
+        card
+      "
+    >
+      <img className="w-full h-auto object-cover rounded-xl" src={photo} alt={prompt} />
+      <div className="
+          group-hover:flex
+          flex-col
+          max-h-[94.5%]
+          hidden
+          absolute 
+          bottom-0
+          left-0
+          right-0
+          bg-[#10131f]
+          m-2
+          p-4
+          rounded-md
+        "
+      >
+
+      </div>
+    </div>
   )
 }
 export default Card
