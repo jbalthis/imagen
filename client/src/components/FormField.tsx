@@ -6,8 +6,8 @@ interface FormFieldProps{
   placeholder: string
   value: string
   handleChange: () => void
-  isSurpriseMe: boolean
-  handleSurpriseMe: () => void
+  isSurpriseMe?: boolean
+  handleSurpriseMe?: () => void
 }
 
 

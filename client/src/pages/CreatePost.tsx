@@ -15,7 +15,8 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [isSurpriseMe, setIsSurpriseMe] = useState(false);
 
-  const fetchPhoto = async (prompt) => {
+  // fetch photo from openai api
+  const fetchPhoto = async (prompt: string) => {
     const response = await fetch("http://localhost:8080/api/v1/dalle", {
       method: "POST",
       headers: {
@@ -27,12 +28,19 @@ const CreatePost = () => {
     return data.photo;
   };
 
+  // render out image from dall-e
   const generateImage = async () => {
-    if (form.prompt) {
+    if (form.prompt && fetchPhoto) {
       try {
+        // set init gen state
         setGeneratingImg(true);
+        
+        // fetch photo from dall-e
         const photo = await fetchPhoto(form.prompt);
+        
+        // update the request form ui
         setForm({ ...form, photo: `data:image/jpeg;base64,${photo}` });
+      
       } catch (error) {
         alert(`Error caught here!\n${error}`);
       } finally {
@@ -43,9 +51,10 @@ const CreatePost = () => {
     }
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => { return };
 
-  const handleChange = (e) => {
+  // handle changes in state via React
+  const handleChange = (e: React.ChangeEvent<HTMLFormElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -86,7 +95,7 @@ const CreatePost = () => {
             name="name"
             placeholder="John Doe"
             value={form.name}
-            handleChange={handleChange}
+            handleChange={() => handleChange}
           />
 
           <FormField
@@ -95,7 +104,7 @@ const CreatePost = () => {
             name="prompt"
             placeholder="a painting of a fox in the style of Starry Night"
             value={form.prompt}
-            handleChange={handleChange}
+            handleChange={() => handleChange}
             isSurpriseMe
             handleSurpriseMe={handleSurpriseMe}
           />
